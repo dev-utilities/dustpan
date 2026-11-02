@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dustpan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <aside class="nav">
+    <div class="brand">dustpan</div>
+    <nav>
+      <p class="nav-group">Google</p>
+      <button class="tool is-active" data-tool="gemini">Gemini chats</button>
+      <button class="tool" data-tool="gmail">Gmail <span class="soon">soon</span></button>
+      <p class="nav-group">This computer</p>
+      <button class="tool" data-tool="mac">System junk <span class="soon">soon</span></button>
+      <button class="tool" data-tool="pycharm">PyCharm caches <span class="soon">soon</span></button>
+      <button class="tool" data-tool="teams">Teams cache <span class="soon">soon</span></button>
+      <button class="tool" data-tool="vscode">VS Code caches <span class="soon">soon</span></button>
+    </nav>
+    <button id="quit" class="quit">Quit Dustpan</button>
+  </aside>
+
+  <main>
+    <div class="profilebar">
+      <label for="profile">Chrome profile</label>
+      <select id="profile" disabled><option>None connected yet</option></select>
+      <span id="profile-state" class="state"></span>
+      <button id="rename" class="link" hidden>Rename</button>
+      <form id="rename-form" class="rename" hidden>
+        <input id="nickname" maxlength="60" placeholder="Nickname, e.g. Work" aria-label="Profile nickname">
+        <button type="submit">Save</button>
+        <button type="button" id="rename-cancel" class="link">Cancel</button>
+      </form>
+    </div>
+
+    <section id="panel-gemini" class="panel">
+      <header class="panel-head">
+        <h1>Gemini chats</h1>
+        <p class="lede">Delete chats from any Google account signed into the chosen Chrome profile. Deleted chats can't be recovered.</p>
+      </header>
+
+      <div id="setup" class="notice" hidden>
+        <h2>Connect Chrome</h2>
+        <p>Dustpan reaches your Google accounts through the Dustpan bridge extension. Each Chrome profile with the extension shows up in the Chrome profile menu above.</p>
+        <ol>
+          <li>Open <code>chrome://extensions</code> in each Chrome profile you want to clean and turn on <b>Developer mode</b>.</li>
+          <li>Click <b>Load unpacked</b> and choose <code id="ext-path">dustpan/extensions/chrome</code>.</li>
+        </ol>
+        <p id="chrome-closed" hidden>Chrome isn't running. <button id="open-chrome">Open Chrome</button></p>
+        <p class="hint">Already loaded? Profiles connect within 30 seconds of Chrome opening.</p>
+      </div>
+
+      <div id="offline" class="notice" hidden>
+        <h2 id="offline-title">This profile isn't connected</h2>
+        <p>Chrome may be closed, the profile may not be open, or the extension is turned off there. It reconnects within 30 seconds of opening.</p>
+        <p class="row">
+          <button id="open-profile">Open this profile in Chrome</button>
+          <button id="forget-profile" class="link">Forget this profile</button>
+        </p>
+      </div>
+
+      <div id="gemini-body" hidden>
+        <section class="block">
+          <div class="block-head">
+            <h2>Accounts</h2>
+            <span id="accounts-status" class="hint">Finding signed-in accounts…</span>
+          </div>
+          <div id="accounts" class="accounts"></div>
+          <button id="load-chats" class="primary" disabled>Show chats</button>
+        </section>
+
+        <section id="chats-block" class="block" hidden>
+          <div class="block-head">
+            <h2>Chats</h2>
+            <span id="chats-status" class="hint"></span>
+          </div>
+          <div class="toolbar">
+            <input id="search" type="search" placeholder="Filter by title" aria-label="Filter by title">
+            <label>Last active
+              <select id="age">
+                <option value="0">any time</option>
+                <option value="7">over a week ago</option>
+                <option value="30">over a month ago</option>
+                <option value="90">over 3 months ago</option>
+                <option value="365">over a year ago</option>
+              </select>
+            </label>
+          </div>
+          <table class="chats">
+            <thead>
+              <tr>
+                <th class="c-check"><input id="select-shown" type="checkbox" aria-label="Select all shown chats"></th>
+                <th>Title</th>
+                <th class="c-account">Account</th>
+                <th class="c-date">Last active</th>
+                <th class="c-status">Status</th>
+              </tr>
+            </thead>
+            <tbody id="chat-rows"></tbody>
+          </table>
+          <p id="empty" class="empty" hidden>No chats match these filters.</p>
+        </section>
+      </div>
+
+      <footer id="actionbar" class="actionbar" hidden>
+        <span id="selection-count"></span>
+        <span class="spacer"></span>
+        <button id="stop" hidden>Stop</button>
+        <button id="delete" class="danger">Delete chats</button>
+      </footer>
+    </section>
+
+    <section id="panel-soon" class="panel" hidden>
+      <header class="panel-head">
+        <h1 id="soon-title"></h1>
+        <p class="lede">Not built yet. Gemini chats is the first tool; this one comes next.</p>
+      </header>
+    </section>
+  </main>
+
+  <div id="stopped" class="stopped" hidden>
+    <div>
+      <h1>Dustpan has stopped</h1>
+      <p>You can close this tab. Run <code>dustpan</code> to start it again; this page reloads if it comes back on the same port.</p>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

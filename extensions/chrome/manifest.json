@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Dustpan bridge",
+  "version": "0.4.0",
+  "description": "Connects this Chrome profile to the local dustpan app so it can act with your existing Google sign-ins.",
+  "permissions": ["scripting", "tabs", "storage", "alarms", "identity", "identity.email"],
+  "host_permissions": ["https://gemini.google.com/*"],
+  "background": { "service_worker": "background.js" },
+  "action": { "default_title": "Open dustpan" }
+}
