@@ -298,15 +298,20 @@ async function deleteSelected() {
 }
 
 // ---- Wiring ----
-document.querySelectorAll('.tool').forEach((btn) => btn.addEventListener('click', () => {
+function showTool(btn) {
+  const tool = btn.dataset.tool;
   document.querySelectorAll('.tool').forEach((b) => b.classList.toggle('is-active', b === btn));
-  const isGemini = btn.dataset.tool === 'gemini';
-  $('panel-gemini').hidden = !isGemini;
-  $('panel-soon').hidden = isGemini;
+  const panel = $(`panel-${tool}`) ?? $('panel-soon');
+  document.querySelectorAll('.panel').forEach((p) => { p.hidden = p !== panel; });
   $('soon-title').textContent = btn.firstChild.textContent.trim();
-  if (!isGemini) $('actionbar').hidden = true;
+  // The Chrome profile picker only matters for Google tools.
+  $('profilebar').hidden = tool !== 'gemini';
+  if (tool !== 'gemini') $('actionbar').hidden = true;
   else if (chats.length && currentProfile()?.online) $('actionbar').hidden = false;
-}));
+  history.replaceState(null, '', tool === 'gemini' ? location.pathname : `#${tool}`);
+  window.dispatchEvent(new CustomEvent('dustpan:tool', { detail: tool }));
+}
+document.querySelectorAll('.tool').forEach((btn) => btn.addEventListener('click', () => showTool(btn)));
 
 $('quit').addEventListener('click', async () => {
   if (running && !confirm('Chats are still being deleted. Quit anyway?')) return;
@@ -363,6 +368,13 @@ async function refreshInfo() {
 
 await refreshInfo();
 connectServer();
+// #claude etc. opens that tool, on load and when the address changes.
+const toolFromHash = () => {
+  const btn = document.querySelector(`.tool[data-tool="${location.hash.slice(1) || 'gemini'}"]`);
+  if (btn && !btn.classList.contains('is-active')) showTool(btn);
+};
+window.addEventListener('hashchange', toolFromHash);
+toolFromHash();
 setInterval(refreshInfo, 5000);
 // The server drops connections that stay silent for 60s.
 setInterval(() => { if (socket?.readyState === WebSocket.OPEN) socket.send('{"type":"ping"}'); }, 20000);

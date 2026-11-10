@@ -10,6 +10,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import * as db from './db.js';
 import { acceptWebSocket } from './ws.js';
 import { chromeProfiles, isChromeRunning, openChrome } from './chrome.js';
+import * as claude from './claude.js';
 
 export const APP = 'dustpan';
 // The extension scans this range to find the server, so it must match background.js.
@@ -35,7 +36,7 @@ function readJson(req) {
     const chunks = [];
     req.on('data', (c) => {
       size += c.length;
-      if (size > 64 * 1024) { reject(new Error('body too large')); req.destroy(); }
+      if (size > 256 * 1024) { reject(new Error('body too large')); req.destroy(); }
       chunks.push(c);
     });
     req.on('end', () => {
@@ -187,6 +188,8 @@ export async function startServer({ verbose = false, instanceId = crypto.randomU
       broadcast();
       return { ok: true };
     },
+    'GET /api/claude/scan': () => claude.scan(),
+    'POST /api/claude/clean': ({ ids, mode }) => claude.clean(ids, mode),
     'POST /api/chrome/open': async ({ profileId }) => {
       const profile = profileId ? profileList().find((p) => p.id === profileId) : null;
       await openChrome({ profileDir: profile?.profileDir });

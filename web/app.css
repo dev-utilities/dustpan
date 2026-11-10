@@ -167,3 +167,43 @@ tr.is-deleted:hover { background: none; }
 @media (prefers-reduced-motion: reduce) {
   .title::after { transition: none; }
 }
+
+/* Claude data */
+.cl-apps { display: flex; flex-wrap: wrap; gap: 8px; margin: -4px 0 26px; }
+.cl-app { display: flex; flex-direction: column; padding: 7px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); font-size: 14px; }
+.cl-app small { color: var(--muted); font-size: 12px; }
+.cl-app.is-running small { color: var(--danger); }
+.cl-cats { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; margin-bottom: 18px; }
+.cl-cat {
+  display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; align-items: baseline;
+  text-align: left; padding: 10px 12px; border-radius: 8px; opacity: .55;
+}
+.cl-cat[aria-pressed="true"] { opacity: 1; border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+.cl-cat-name { font-weight: 500; font-size: 14px; }
+.cl-cat-size { font-variant-numeric: tabular-nums; font-size: 14px; }
+.cl-cat small { grid-column: 1 / -1; color: var(--muted); font-size: 12px; }
+.cl-toggles { gap: 18px; }
+.cl-toggles label { cursor: pointer; }
+
+.cl-table .cl-where { width: 130px; }
+.cl-table .cl-size { width: 90px; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.cl-table th.cl-size { text-align: right; }
+.cl-sub { color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cl-flags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
+.cl-badge { font-size: 12px; padding: 0 6px; border-radius: 4px; background: var(--accent-soft); color: var(--muted); }
+.cl-badge.warn { color: var(--danger); }
+.cl-badge.lock { background: none; border: 1px solid var(--line); }
+.cl-badge.ok { color: var(--ok); }
+.cl-table tr.cl-group td { background: var(--bg); padding-top: 12px; }
+.cl-table tr.cl-group:hover td { background: var(--accent-soft); }
+.cl-table tr.cl-group .cl-sub { white-space: normal; }
+.cl-chevron { display: inline-block; width: 16px; color: var(--muted); }
+.cl-table tr.is-blocked { cursor: default; }
+.cl-table tr.is-blocked .title { color: var(--muted); }
+.cl-table tr.is-blocked:hover { background: none; }
+.cl-mode { display: flex; gap: 8px; align-items: center; color: var(--muted); font-size: 14px; }
+.cl-mode select { padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+
+@media (max-width: 720px) {
+  .cl-table .cl-where { display: none; }
+}

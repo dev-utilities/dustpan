@@ -17,6 +17,7 @@
       <button class="tool is-active" data-tool="gemini">Gemini chats</button>
       <button class="tool" data-tool="gmail">Gmail <span class="soon">soon</span></button>
       <p class="nav-group">This computer</p>
+      <button class="tool" data-tool="claude">Claude data</button>
       <button class="tool" data-tool="mac">System junk <span class="soon">soon</span></button>
       <button class="tool" data-tool="pycharm">PyCharm caches <span class="soon">soon</span></button>
       <button class="tool" data-tool="teams">Teams cache <span class="soon">soon</span></button>
@@ -26,7 +27,7 @@
   </aside>
 
   <main>
-    <div class="profilebar">
+    <div id="profilebar" class="profilebar">
       <label for="profile">Chrome profile</label>
       <select id="profile" disabled><option>None connected yet</option></select>
       <span id="profile-state" class="state"></span>
@@ -115,6 +116,84 @@
       </footer>
     </section>
 
+    <section id="panel-claude" class="panel" hidden>
+      <header class="panel-head">
+        <h1>Claude data</h1>
+        <p class="lede">Caches, old versions, Cowork, temp files and old conversations from Claude Code and every Claude app on this computer. Nothing is removed until you pick items and press Clean.</p>
+      </header>
+
+      <div class="block-head">
+        <span id="cl-status" class="hint">Not scanned yet.</span>
+        <button id="cl-rescan">Scan again</button>
+      </div>
+      <div id="cl-apps" class="cl-apps"></div>
+
+      <div class="block-head"><h2>What to show</h2><button id="cl-all-cats" class="link">All types</button></div>
+      <div id="cl-cats" class="cl-cats"></div>
+
+      <div class="toolbar">
+        <input id="cl-search" type="search" placeholder="Filter by title, project or path" aria-label="Filter by title, project or path">
+        <label>Where <select id="cl-where"><option value="">everywhere</option></select></label>
+        <label>Last used
+          <select id="cl-age">
+            <option value="0">any time</option>
+            <option value="1">over a day ago</option>
+            <option value="7">over a week ago</option>
+            <option value="30">over a month ago</option>
+            <option value="90">over 3 months ago</option>
+          </select>
+        </label>
+        <label>Size
+          <select id="cl-min">
+            <option value="0">any</option>
+            <option value="1000000">over 1 MB</option>
+            <option value="10000000">over 10 MB</option>
+            <option value="100000000">over 100 MB</option>
+            <option value="1000000000">over 1 GB</option>
+          </select>
+        </label>
+        <label>Sort
+          <select id="cl-sort">
+            <option value="size">largest first</option>
+            <option value="old">oldest first</option>
+            <option value="new">newest first</option>
+            <option value="name">by name</option>
+          </select>
+        </label>
+      </div>
+      <div class="toolbar cl-toggles">
+        <label><input id="cl-orphans" type="checkbox"> Only leftovers (project folder or session gone)</label>
+        <label><input id="cl-linked" type="checkbox"> Allow conversations still listed in a Claude app</label>
+        <label><input id="cl-kept" type="checkbox"> Show kept and in-use items</label>
+      </div>
+
+      <table class="chats cl-table">
+        <thead>
+          <tr>
+            <th class="c-check"></th>
+            <th>Item</th>
+            <th class="cl-where">Where</th>
+            <th class="cl-size">Size</th>
+            <th class="c-date">Last used</th>
+          </tr>
+        </thead>
+        <tbody id="cl-rows"></tbody>
+      </table>
+      <p id="cl-empty" class="empty" hidden>Nothing matches these filters.</p>
+
+      <footer id="cl-actionbar" class="actionbar" hidden>
+        <span id="cl-count"></span>
+        <span class="spacer"></span>
+        <label class="cl-mode">Then
+          <select id="cl-mode">
+            <option value="trash">move to Trash</option>
+            <option value="delete">delete permanently</option>
+          </select>
+        </label>
+        <button id="cl-clean" class="danger" disabled>Clean</button>
+      </footer>
+    </section>
+
     <section id="panel-soon" class="panel" hidden>
       <header class="panel-head">
         <h1 id="soon-title"></h1>
@@ -131,5 +210,6 @@
   </div>
 
   <script type="module" src="app.js"></script>
+  <script type="module" src="claude.js"></script>
 </body>
 </html>
