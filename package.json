@@ -1,7 +1,7 @@
 {
   "name": "dustpan",
-  "version": "0.3.0",
-  "description": "Local web app that cleans Gemini chats, Claude data, Gmail and Mac junk.",
+  "version": "0.4.0",
+  "description": "Local web app that cleans Gemini chats, Claude data, Docker, JetBrains IDEs, developer and app caches.",
   "type": "module",
   "bin": {
     "dustpan": "bin/dustpan.js"

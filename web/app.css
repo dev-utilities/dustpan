@@ -201,8 +201,10 @@ tr.is-deleted:hover { background: none; }
 .cl-table tr.is-blocked { cursor: default; }
 .cl-table tr.is-blocked .title { color: var(--muted); }
 .cl-table tr.is-blocked:hover { background: none; }
-.cl-mode { display: flex; gap: 8px; align-items: center; color: var(--muted); font-size: 14px; }
-.cl-mode select { padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+.cl-optins { display: contents; }
+.cl-notice { margin: 0 0 18px; }
+.cl-mode-wrap { display: flex; gap: 8px; align-items: center; color: var(--muted); font-size: 14px; }
+.cl-mode-wrap select { padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
 
 @media (max-width: 720px) {
   .cl-table .cl-where { display: none; }

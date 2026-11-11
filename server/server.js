@@ -10,7 +10,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import * as db from './db.js';
 import { acceptWebSocket } from './ws.js';
 import { chromeProfiles, isChromeRunning, openChrome } from './chrome.js';
-import * as claude from './claude.js';
+import * as cleaners from './cleaners/engine.js';
 
 export const APP = 'dustpan';
 // The extension scans this range to find the server, so it must match background.js.
@@ -188,8 +188,6 @@ export async function startServer({ verbose = false, instanceId = crypto.randomU
       broadcast();
       return { ok: true };
     },
-    'GET /api/claude/scan': () => claude.scan(),
-    'POST /api/claude/clean': ({ ids, mode }) => claude.clean(ids, mode),
     'POST /api/chrome/open': async ({ profileId }) => {
       const profile = profileId ? profileList().find((p) => p.id === profileId) : null;
       await openChrome({ profileDir: profile?.profileDir });
@@ -207,7 +205,11 @@ export async function startServer({ verbose = false, instanceId = crypto.randomU
     if (req.method === 'GET' && pathname === '/api/signature') {
       return json(res, 200, routes['GET /api/signature'](), { 'access-control-allow-origin': '*' });
     }
-    const route = routes[`${req.method} ${pathname}`];
+    // Cleaner tools: GET /api/clean/<tool>/scan, POST /api/clean/<tool>/clean
+    const cleaner = pathname.match(/^\/api\/clean\/([\w-]+)\/(scan|clean)$/);
+    const route = routes[`${req.method} ${pathname}`]
+      ?? (cleaner && req.method === 'GET' && cleaner[2] === 'scan' ? () => cleaners.scan(cleaner[1]) : null)
+      ?? (cleaner && req.method === 'POST' && cleaner[2] === 'clean' ? (body) => cleaners.clean(cleaner[1], body) : null);
     if (route) {
       // The custom header forces a CORS preflight, so other sites can't call POST routes.
       if (req.method === 'POST' && req.headers['x-dustpan'] !== '1') return json(res, 400, { error: 'missing x-dustpan header' });

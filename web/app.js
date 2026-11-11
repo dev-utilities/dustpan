@@ -315,6 +315,7 @@ document.querySelectorAll('.tool').forEach((btn) => btn.addEventListener('click'
 
 $('quit').addEventListener('click', async () => {
   if (running && !confirm('Chats are still being deleted. Quit anyway?')) return;
+  if (window.dustpanCleaning?.() && !confirm('Cleaning is still running. Quit anyway?')) return;
   quitting = true;
   try { await api('/api/quit', {}); } catch {}
   showStopped();
